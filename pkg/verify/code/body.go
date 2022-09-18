@@ -3,12 +3,13 @@ package code
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	"github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
 	"github.com/google/uuid"
-	"strings"
-	"time"
 )
 
 const (
@@ -41,6 +42,7 @@ func BuildBody(
 	case usedfor.UsedFor_Transfer:
 		fallthrough //nolint
 	case usedfor.UsedFor_Update:
+		expireAt := 10
 		vCode := code.Generate6NumberCode()
 		userCode := code.UserCode{
 			AppID:       uuid.MustParse(appID),
@@ -49,7 +51,7 @@ func BuildBody(
 			UsedFor:     usedFor.String(),
 			Code:        vCode,
 			NextAt:      time.Now().Add(1 * time.Minute),
-			ExpireAt:    time.Now().Add(10 * time.Minute),
+			ExpireAt:    time.Now().Add(time.Duration(expireAt) * time.Minute),
 		}
 		if ok, err := code.Nextable(ctx, &userCode); err != nil || !ok {
 			return "", fmt.Errorf("wait for next code generation")

@@ -2,6 +2,7 @@ package verify
 
 import (
 	"context"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"

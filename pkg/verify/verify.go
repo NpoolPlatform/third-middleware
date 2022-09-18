@@ -3,6 +3,7 @@ package verify
 import (
 	"context"
 	"fmt"
+
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	verifycode "github.com/NpoolPlatform/third-middleware/pkg/verify/code"

@@ -2,15 +2,14 @@ package email
 
 import (
 	"fmt"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
+	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"golang.org/x/xerrors"
-
-	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
 )
 
 const (
@@ -20,7 +19,7 @@ const (
 	CharSet   = "UTF-8"
 )
 
-func sendEmailByAWS(subject, content, from, to string, replyTo ...string) error { //nolint
+func sendEmailByAWS(subject, content, from, to string, replyTo ...string) error {
 	myServiceName := config.GetStringValueWithNameSpace("", config.KeyHostname)
 	region := config.GetStringValueWithNameSpace(myServiceName, Region)
 	accessKey := config.GetStringValueWithNameSpace(myServiceName, AccessKey)
@@ -31,7 +30,7 @@ func sendEmailByAWS(subject, content, from, to string, replyTo ...string) error 
 		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
 	})
 	if err != nil {
-		return xerrors.Errorf("new aws session error: %v", err)
+		return fmt.Errorf("new aws session error: %v", err)
 	}
 
 	svc := ses.New(sess)

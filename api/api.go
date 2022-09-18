@@ -2,7 +2,8 @@ package api
 
 import (
 	"context"
-	"github.com/NpoolPlatform/message/npool/third/mw/v1"
+
+	v1 "github.com/NpoolPlatform/message/npool/third/mw/v1"
 	"github.com/NpoolPlatform/third-middleware/api/v1/verify"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
