@@ -39,8 +39,8 @@ func SendCode(
 
 func VerifyCode(
 	ctx context.Context,
-	appID,
-	account,
+	appID string,
+	account *string,
 	code string,
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,
@@ -50,7 +50,7 @@ func VerifyCode(
 	}
 	userCode := verifycode.UserCode{
 		AppID:       uuid.MustParse(appID),
-		Account:     account,
+		Account:     *account,
 		AccountType: accountType.String(),
 		UsedFor:     usedFor.String(),
 		Code:        code,

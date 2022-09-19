@@ -99,7 +99,7 @@ func (s *Server) VerifyCode(ctx context.Context, in *npool.VerifyCodeRequest) (r
 
 	span = commontracer.TraceInvoker(span, "verify", "verify", "SendCode")
 
-	err = verify.VerifyCode(ctx, in.GetAppID(), in.GetAccount(), in.GetCode(), in.GetAccountType(), in.GetUsedFor())
+	err = verify.VerifyCode(ctx, in.GetAppID(), in.Account, in.GetCode(), in.GetAccountType(), in.GetUsedFor())
 	if err != nil {
 		logger.Sugar().Errorw("GetAuths", "error", err)
 		return &npool.VerifyCodeResponse{}, status.Error(codes.Internal, err.Error())
