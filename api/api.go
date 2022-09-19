@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 
+	"github.com/NpoolPlatform/third-middleware/api/v1/contact"
+
 	"github.com/NpoolPlatform/third-middleware/api/v1/notify"
 
 	v1 "github.com/NpoolPlatform/message/npool/third/mw/v1"
@@ -20,6 +22,7 @@ func Register(server grpc.ServiceRegistrar) {
 	v1.RegisterMiddlewareServer(server, &Server{})
 	verify.Register(server)
 	notify.Register(server)
+	contact.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
