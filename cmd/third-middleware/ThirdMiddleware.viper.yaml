@@ -1,10 +1,10 @@
 ---
 config:
   hostname: "third-middleware.npool.top"
-  http_port: 50330
-  grpc_port: 50331
-  healthz_port: 50332
-  prometheus_port: 50333
+  http_port: 50520
+  grpc_port: 50521
+  healthz_port: 50522
+  prometheus_port: 50523
   appid: "89089012783789789719823798127398"
   serviceid: "6161ecc0-0b2c-11ed-b571-72e9de4b20f6"
   logdir: "./"

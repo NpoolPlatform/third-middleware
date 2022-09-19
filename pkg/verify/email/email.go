@@ -59,7 +59,7 @@ func SendCode(
 		body = strings.ReplaceAll(body, code.NameTemplate, template.DefaultToUsername)
 	}
 
-	err = sendEmailByAWS(template.Subject, body, template.Sender, account)
+	err = SendEmailByAWS(template.Subject, body, template.Sender, account)
 	if err != nil {
 		return fmt.Errorf("fail to send email: %v", err)
 	}

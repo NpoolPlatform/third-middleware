@@ -16,7 +16,7 @@ const (
 	SecretKey = constant.AWSSecretKey
 )
 
-func sendSMSByAWS(msg, to string) error {
+func SendSMSByAWS(msg, to string) error {
 	myServiceName := config.GetStringValueWithNameSpace("", config.KeyHostname)
 	region := config.GetStringValueWithNameSpace(myServiceName, Region)
 	accessKey := config.GetStringValueWithNameSpace(myServiceName, AccessKey)

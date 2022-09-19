@@ -8,6 +8,7 @@ import (
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	verifycode "github.com/NpoolPlatform/third-middleware/pkg/verify/code"
 	"github.com/NpoolPlatform/third-middleware/pkg/verify/email"
+	"github.com/NpoolPlatform/third-middleware/pkg/verify/google"
 	"github.com/NpoolPlatform/third-middleware/pkg/verify/sms"
 	"github.com/google/uuid"
 )
@@ -44,6 +45,9 @@ func VerifyCode(
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,
 ) error {
+	if accountType == signmethod.SignMethodType_Google {
+		return google.VerifyGoogleRecaptchaV3(code)
+	}
 	userCode := verifycode.UserCode{
 		AppID:       uuid.MustParse(appID),
 		Account:     account,

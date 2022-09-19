@@ -58,16 +58,16 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 50330
-      targetPort: 50330
+      port: 50520
+      targetPort: 50520
     - name: grpc
-      port: 50331
-      targetPort: 50331
+      port: 50521
+      targetPort: 50521
     - name: healthz
-      port: 50332
-      targetPort: 50332
+      port: 50522
+      targetPort: 50522
     - name: prometheus
-      port: 50333
-      targetPort: 50333
+      port: 50523
+      targetPort: 50523
   selector:
     app: third-middleware

@@ -47,7 +47,7 @@ func SendCode(
 		return fmt.Errorf("fail build email body: %v", err)
 	}
 
-	err = sendSMSByAWS(body, account)
+	err = SendSMSByAWS(body, account)
 	if err != nil {
 		return fmt.Errorf("fail to send email: %v", err)
 	}

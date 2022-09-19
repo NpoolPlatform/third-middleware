@@ -8,13 +8,14 @@ import (
 
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
-	"github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
 	"github.com/google/uuid"
 )
 
 const (
 	CodeTemplate = "{{ CODE }}"
 	NameTemplate = "{{ NAME }}"
+	ExpireAt     = 10
+	CodeLen      = 6
 )
 
 func BuildBody(
@@ -42,22 +43,21 @@ func BuildBody(
 	case usedfor.UsedFor_Transfer:
 		fallthrough //nolint
 	case usedfor.UsedFor_Update:
-		expireAt := 10
-		vCode := code.Generate6NumberCode()
-		userCode := code.UserCode{
+		vCode := Generate(CodeLen)
+		userCode := UserCode{
 			AppID:       uuid.MustParse(appID),
 			Account:     account,
 			AccountType: accountType.String(),
 			UsedFor:     usedFor.String(),
 			Code:        vCode,
 			NextAt:      time.Now().Add(1 * time.Minute),
-			ExpireAt:    time.Now().Add(time.Duration(expireAt) * time.Minute),
+			ExpireAt:    time.Now().Add(time.Duration(ExpireAt) * time.Minute),
 		}
-		if ok, err := code.Nextable(ctx, &userCode); err != nil || !ok {
+		if ok, err := Nextable(ctx, &userCode); err != nil || !ok {
 			return "", fmt.Errorf("wait for next code generation")
 		}
 
-		err := code.CreateCodeCache(ctx, &userCode)
+		err := CreateCodeCache(ctx, &userCode)
 		if err != nil {
 			return "", fmt.Errorf("fail create code cache: %v", err)
 		}
