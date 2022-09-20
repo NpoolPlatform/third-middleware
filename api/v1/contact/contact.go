@@ -41,11 +41,6 @@ func (s *Server) ContactViaEmail(ctx context.Context, in *npool.ContactViaEmailR
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 	}
 
-	if in.Account == "" {
-		logger.Sugar().Errorw("NotifyEmail", "error", err)
-		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "Account is empty")
-	}
-
 	if in.Sender == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "Sender is empty")

@@ -37,7 +37,6 @@ func do(ctx context.Context, handler handler) error {
 func ContactViaEmail(ctx context.Context,
 	appID string,
 	usedFor usedfor.UsedFor,
-	account string,
 	sender,
 	subject,
 	body,
