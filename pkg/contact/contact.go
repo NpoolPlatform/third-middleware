@@ -20,7 +20,6 @@ func ContactViaEmail(
 	ctx context.Context,
 	appID string,
 	usedFor usedfor.UsedFor,
-	account string,
 	sender,
 	subject,
 	body,
@@ -49,7 +48,7 @@ func ContactViaEmail(
 	sendBody := fmt.Sprintf("From: %v<br>Name: %v<br>%v", sender, senderName, body)
 	sendBody = strings.ReplaceAll(sendBody, "\n", "<br>")
 
-	err = email.SendEmailByAWS(subject, sendBody, sender, account, sender)
+	err = email.SendEmailByAWS(subject, sendBody, info.Sender, info.Account, sender)
 	if err != nil {
 		return fmt.Errorf("fail send email: %v", err)
 	}

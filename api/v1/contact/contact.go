@@ -71,7 +71,6 @@ func (s *Server) ContactViaEmail(ctx context.Context, in *npool.ContactViaEmailR
 	err = contact.ContactViaEmail(
 		ctx, in.GetAppID(),
 		in.GetUsedFor(),
-		in.GetAccount(),
 		in.GetSender(),
 		in.GetSubject(),
 		in.GetBody(),

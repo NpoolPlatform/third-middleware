@@ -47,7 +47,6 @@ func ContactViaEmail(ctx context.Context,
 		_, err := cli.ContactViaEmail(ctx, &npool.ContactViaEmailRequest{
 			AppID:      appID,
 			UsedFor:    usedFor,
-			Account:    account,
 			Sender:     sender,
 			Subject:    subject,
 			Body:       body,
