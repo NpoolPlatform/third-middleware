@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: service-config
-              mountPath: /etc/ServiceTemplate
+              mountPath: /etc/ThirdMiddleware
           env:
             - name: ENV_ENVIRONMENT_TARGET
               valueFrom:
@@ -48,7 +48,7 @@ spec:
             name: third-middleware-config
             items:
               - key: service-conf
-                path: ServiceTemplate.viper.yaml
+                path: ThirdMiddleware.viper.yaml
 ---
 apiVersion: v1
 kind: Service
