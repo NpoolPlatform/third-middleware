@@ -12,7 +12,7 @@ import (
 
 	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/verify"
 
-	constant "github.com/NpoolPlatform/third-manager/pkg/message/const"
+	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
 )
 
 var timeout = 10 * time.Second

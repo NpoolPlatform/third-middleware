@@ -45,6 +45,7 @@ func ContactViaEmail(
 	if info == nil {
 		return fmt.Errorf("failed get contact")
 	}
+
 	sendBody := fmt.Sprintf("From: %v<br>Name: %v<br>%v", sender, senderName, body)
 	sendBody = strings.ReplaceAll(sendBody, "\n", "<br>")
 
