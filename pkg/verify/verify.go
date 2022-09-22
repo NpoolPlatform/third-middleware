@@ -40,17 +40,24 @@ func SendCode(
 func VerifyCode(
 	ctx context.Context,
 	appID string,
-	account *string,
+	account string,
 	code string,
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,
 ) error {
 	if accountType == signmethod.SignMethodType_Google {
-		return google.VerifyGoogleRecaptchaV3(code)
+		verified, err := google.VerifyCode(account, code)
+		if err != nil {
+			return err
+		}
+		if !verified {
+			return fmt.Errorf("invalid code: %v", err)
+		}
+		return nil
 	}
 	userCode := verifycode.UserCode{
 		AppID:       uuid.MustParse(appID),
-		Account:     *account,
+		Account:     account,
 		AccountType: accountType.String(),
 		UsedFor:     usedFor.String(),
 		Code:        code,
@@ -62,4 +69,8 @@ func VerifyCode(
 	}
 
 	return nil
+}
+
+func VerifyGoogleRecaptchaV3(token string) error {
+	return google.VerifyGoogleRecaptchaV3(token)
 }

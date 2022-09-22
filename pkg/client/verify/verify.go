@@ -66,7 +66,7 @@ func SendCode(ctx context.Context,
 func VerifyCode(
 	ctx context.Context,
 	appID string,
-	account *string,
+	account string,
 	code string,
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,

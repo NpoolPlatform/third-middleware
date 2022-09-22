@@ -1,46 +1,65 @@
+//nolint
 package google
 
 import (
+	"crypto/hmac"
+	"crypto/sha1"
+	"encoding/base32"
 	"fmt"
+	"strings"
 	"time"
-
-	"github.com/NpoolPlatform/go-service-framework/pkg/config"
-	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
-	"github.com/go-resty/resty/v2"
 )
 
-type verifyResponse struct {
-	Success     bool      `json:"success"`
-	Score       float64   `json:"score"`
-	Action      string    `json:"action"`
-	ChallengeTS time.Time `json:"challenge_ts"`
-	Hostname    string    `json:"hostname"`
-	ErrorCodes  []string  `json:"error-codes"`
+func hmacSha1(key, data []byte) []byte {
+	h := hmac.New(sha1.New, key)
+	if total := len(data); total > 0 {
+		h.Write(data)
+	}
+	return h.Sum(nil)
 }
 
-func VerifyGoogleRecaptchaV3(recaptchaToken string) error {
-	hostname := config.GetStringValueWithNameSpace("", config.KeyHostname)
-	recaptchaURL := config.GetStringValueWithNameSpace(hostname, constant.GoogleRecaptchaV3URL)
-	recaptchaSecret := config.GetStringValueWithNameSpace(hostname, constant.GoogleRecaptchaV3Secret)
+func base32decode(s string) ([]byte, error) {
+	return base32.StdEncoding.DecodeString(s)
+}
 
-	if recaptchaURL == "" || recaptchaSecret == "" {
-		return fmt.Errorf("invalid recaptcha parameter")
+func toBytes(value int64) []byte {
+	result := []byte{}
+	mask := int64(0xFF)
+	shifts := [8]uint16{56, 48, 40, 32, 24, 16, 8, 0}
+	for _, shift := range shifts {
+		result = append(result, byte((value>>shift)&mask))
 	}
+	return result
+}
 
-	url := fmt.Sprintf("%v?secret=%v&response=%v", recaptchaURL, recaptchaSecret, recaptchaToken)
-	resp, err := resty.New().R().SetResult(&verifyResponse{}).Post(url)
+func toUint32(bts []byte) uint32 {
+	return (uint32(bts[0]) << 24) + (uint32(bts[1]) << 16) +
+		(uint32(bts[2]) << 8) + uint32(bts[3])
+}
+
+func oneTimePassword(key, data []byte) uint32 {
+	hash := hmacSha1(key, data)
+	offset := hash[len(hash)-1] & 0x0F
+	hashParts := hash[offset : offset+4]
+	hashParts[0] &= 0x7F
+	number := toUint32(hashParts)
+	return number % 1000000
+}
+
+func VerifyCode(secret, code string) (bool, error) {
+	secretUpper := strings.ToUpper(secret)
+	secretKey, err := base32decode(secretUpper)
 	if err != nil {
-		return fmt.Errorf("fail verify google recaptcha v3: %v", err)
+		return false, err
 	}
 
-	vResp, ok := resp.Result().(*verifyResponse)
-	if !ok {
-		return fmt.Errorf("fail get response")
+	if code == fmt.Sprintf("%06d", oneTimePassword(secretKey, toBytes(time.Now().UTC().Unix()/30))) {
+		return true, nil
+	} else if code == fmt.Sprintf("%06d", oneTimePassword(secretKey, toBytes((time.Now().UTC().Unix()-30)/30))) {
+		return true, nil
+	} else if code == fmt.Sprintf("%06d", oneTimePassword(secretKey, toBytes((time.Now().UTC().Unix()+30)/30))) {
+		return true, nil
 	}
 
-	if !vResp.Success {
-		return fmt.Errorf("fail verify google recaptcha v3: %v", vResp.ErrorCodes)
-	}
-
-	return nil
+	return false, nil
 }

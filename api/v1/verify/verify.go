@@ -83,9 +83,9 @@ func (s *Server) VerifyCode(ctx context.Context, in *npool.VerifyCodeRequest) (r
 		return &npool.VerifyCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if in.GetAccount() == "" && in.GetAccountType() != signmethod.SignMethodType_Google {
+	if in.GetAccount() == "" {
 		logger.Sugar().Errorw("SendCode", "error", err)
-		return &npool.VerifyCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		return &npool.VerifyCodeResponse{}, status.Error(codes.InvalidArgument, "Account is empty")
 	}
 
 	switch in.GetAccountType() {
@@ -99,11 +99,43 @@ func (s *Server) VerifyCode(ctx context.Context, in *npool.VerifyCodeRequest) (r
 
 	span = commontracer.TraceInvoker(span, "verify", "verify", "SendCode")
 
-	err = verify.VerifyCode(ctx, in.GetAppID(), in.Account, in.GetCode(), in.GetAccountType(), in.GetUsedFor())
+	err = verify.VerifyCode(ctx, in.GetAppID(), in.GetAccount(), in.GetCode(), in.GetAccountType(), in.GetUsedFor())
 	if err != nil {
 		logger.Sugar().Errorw("GetAuths", "error", err)
 		return &npool.VerifyCodeResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	return &npool.VerifyCodeResponse{}, nil
+}
+
+func (s *Server) VerifyGoogleRecaptchaV3(
+	ctx context.Context,
+	in *npool.VerifyGoogleRecaptchaV3Request,
+) (
+	resp *npool.VerifyGoogleRecaptchaV3Response,
+	err error,
+) {
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "SendCode")
+	defer span.End()
+	defer func() {
+		if err != nil {
+			span.SetStatus(scodes.Error, err.Error())
+			span.RecordError(err)
+		}
+	}()
+
+	if in.GetRecaptchaToken() == "" {
+		logger.Sugar().Errorw("SendCode", "error", err)
+		return &npool.VerifyGoogleRecaptchaV3Response{}, status.Error(codes.InvalidArgument, "RecaptchaToken is empty")
+	}
+
+	span = commontracer.TraceInvoker(span, "verify", "verify", "SendCode")
+
+	err = verify.VerifyGoogleRecaptchaV3(in.GetRecaptchaToken())
+	if err != nil {
+		logger.Sugar().Errorw("GetAuths", "error", err)
+		return &npool.VerifyGoogleRecaptchaV3Response{}, status.Error(codes.Internal, err.Error())
+	}
+
+	return &npool.VerifyGoogleRecaptchaV3Response{}, nil
 }
