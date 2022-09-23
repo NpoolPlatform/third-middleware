@@ -34,7 +34,7 @@ func do(ctx context.Context, handler handler) error {
 	return handler(_ctx, cli)
 }
 
-func SendCode(ctx context.Context,
+func NotifyEmail(ctx context.Context,
 	appID,
 	fromAccount string,
 	usedFor usedfor.UsedFor,
