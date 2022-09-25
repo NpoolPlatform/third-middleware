@@ -73,6 +73,11 @@ pipeline {
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name third_manager
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_region $AWS_REGION
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_access_key $AWS_ACCESS_KEY
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_secret_key $AWS_SECRET_KEY
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost recaptcha_url $RECAPTCHA_URL
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost recaptcha_secret $RECAPTCHA_SECRET
             cd -
           done
         '''.stripIndent())
