@@ -33,27 +33,17 @@ func (s *Server) NotifyEmail(ctx context.Context, in *npool.NotifyEmailRequest) 
 		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if in.FromAccount == "" {
+	if in.GetFromAccount() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
-		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, "from account is empty")
 	}
 
-	if in.ReceiverAccount == "" {
+	if in.GetReceiverAccount() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
-		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, "receiver account is empty")
 	}
 
 	if _, err = uuid.Parse(in.LangID); err != nil {
-		logger.Sugar().Errorw("NotifyEmail", "error", err)
-		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	if in.SenderName == "" {
-		logger.Sugar().Errorw("NotifyEmail", "error", err)
-		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	if in.ReceiverName == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
