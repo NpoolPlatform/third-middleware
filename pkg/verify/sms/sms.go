@@ -39,17 +39,17 @@ func SendCode(
 		return err
 	}
 	if template == nil {
-		return fmt.Errorf("failed get email template")
+		return fmt.Errorf("failed get sms template")
 	}
 
 	body, err := code.BuildBody(ctx, appID, account, nil, accountType, usedFor, template.Message)
 	if err != nil {
-		return fmt.Errorf("fail build email body: %v", err)
+		return fmt.Errorf("fail build sms body: %v", err)
 	}
 
 	err = SendSMSByAWS(body, account)
 	if err != nil {
-		return fmt.Errorf("fail to send email: %v", err)
+		return fmt.Errorf("fail to sms email: %v", err)
 	}
 
 	return nil
