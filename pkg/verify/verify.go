@@ -51,7 +51,7 @@ func VerifyCode(
 			return err
 		}
 		if !verified {
-			return fmt.Errorf("invalid code: %v", err)
+			return fmt.Errorf("invalid google code")
 		}
 		return nil
 	}
@@ -65,7 +65,7 @@ func VerifyCode(
 
 	err := verifycode.VerifyCodeCache(ctx, &userCode)
 	if err != nil {
-		return fmt.Errorf("invalid code: %v", err)
+		return fmt.Errorf("invalid %v code: %v", accountType, err)
 	}
 
 	return nil
