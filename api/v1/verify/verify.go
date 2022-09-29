@@ -43,8 +43,8 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (resp 
 	}
 
 	if in.GetAccount() == "" {
-		logger.Sugar().Errorw("SendCode", "error", err)
-		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		logger.Sugar().Errorw("SendCode", "Account", in.GetAccount())
+		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "invalid account")
 	}
 
 	switch in.GetAccountType() {
