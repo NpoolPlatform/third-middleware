@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
-	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
+	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 	"github.com/go-resty/resty/v2"
 )
 

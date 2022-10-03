@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
 
-	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
+	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 )
 
 const (
