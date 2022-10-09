@@ -32,12 +32,12 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (resp 
 
 	span = tracer.Trace(span, in)
 
-	if _, err = uuid.Parse(in.AppID); err != nil {
+	if _, err = uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("SendCode", "error", err)
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if _, err = uuid.Parse(in.LangID); err != nil {
+	if _, err = uuid.Parse(in.GetLangID()); err != nil {
 		logger.Sugar().Errorw("SendCode", "error", err)
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -78,7 +78,7 @@ func (s *Server) VerifyCode(ctx context.Context, in *npool.VerifyCodeRequest) (r
 
 	span = tracer.TraceVerify(span, in)
 
-	if _, err = uuid.Parse(in.AppID); err != nil {
+	if _, err = uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("SendCode", "error", err)
 		return &npool.VerifyCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}

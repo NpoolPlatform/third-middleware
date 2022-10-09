@@ -41,22 +41,22 @@ func (s *Server) ContactViaEmail(ctx context.Context, in *npool.ContactViaEmailR
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 	}
 
-	if in.Sender == "" {
+	if in.GetSender() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "Sender is empty")
 	}
 
-	if in.Subject == "" {
+	if in.GetSubject() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
 	}
 
-	if in.Body == "" {
+	if in.GetBody() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "Body is empty")
 	}
 
-	if in.SenderName == "" {
+	if in.GetSenderName() == "" {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.ContactViaEmailResponse{}, status.Error(codes.InvalidArgument, "SenderName is empty")
 	}
