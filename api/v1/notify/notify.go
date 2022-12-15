@@ -28,7 +28,7 @@ func (s *Server) NotifyEmail(ctx context.Context, in *npool.NotifyEmailRequest) 
 
 	span = tracer.Trace(span, in)
 
-	if _, err = uuid.Parse(in.AppID); err != nil {
+	if _, err = uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -43,7 +43,7 @@ func (s *Server) NotifyEmail(ctx context.Context, in *npool.NotifyEmailRequest) 
 		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, "receiver account is empty")
 	}
 
-	if _, err = uuid.Parse(in.LangID); err != nil {
+	if _, err = uuid.Parse(in.GetLangID()); err != nil {
 		logger.Sugar().Errorw("NotifyEmail", "error", err)
 		return &npool.NotifyEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
