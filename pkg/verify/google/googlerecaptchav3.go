@@ -2,6 +2,7 @@ package google
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
@@ -27,8 +28,21 @@ func VerifyGoogleRecaptchaV3(recaptchaToken string) error {
 		return fmt.Errorf("invalid recaptcha parameter")
 	}
 
+	socksProxy := os.Getenv("ENV_RECAPTCHA_REQUEST_PROXY")
 	url := fmt.Sprintf("%v?secret=%v&response=%v", recaptchaURL, recaptchaSecret, recaptchaToken)
-	resp, err := resty.New().R().SetResult(&verifyResponse{}).Post(url)
+
+	const timeout = 5
+
+	cli := resty.New()
+	cli = cli.SetTimeout(timeout * time.Second)
+	if socksProxy != "" {
+		cli = cli.SetProxy(socksProxy)
+	}
+
+	resp, err := cli.
+		R().
+		SetResult(&verifyResponse{}).
+		Post(url)
 	if err != nil {
 		return fmt.Errorf("fail verify google recaptcha v3: %v", err)
 	}

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recaptcha-proxy-environment
+  namespace: kube-system
+data:
+  environment.recaptcha_proxy: ""
