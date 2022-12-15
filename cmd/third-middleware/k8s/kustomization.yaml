@@ -1,4 +1,5 @@
 resources:
+  - 00-configmap.yaml
   - 01-third-middleware.viper.yaml
   - 02-third-middleware.yaml
   - 03-strip-prefix.yaml
