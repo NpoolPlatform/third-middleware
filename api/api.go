@@ -3,11 +3,12 @@ package api
 import (
 	"context"
 
+	"github.com/NpoolPlatform/third-middleware/api/v1/template/notif"
+
 	"github.com/NpoolPlatform/third-middleware/api/v1/contact"
 
-	"github.com/NpoolPlatform/third-middleware/api/v1/notify"
-
 	v1 "github.com/NpoolPlatform/message/npool/third/mw/v1"
+	"github.com/NpoolPlatform/third-middleware/api/v1/notify"
 	"github.com/NpoolPlatform/third-middleware/api/v1/verify"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -23,6 +24,7 @@ func Register(server grpc.ServiceRegistrar) {
 	verify.Register(server)
 	notify.Register(server)
 	contact.Register(server)
+	notif.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
