@@ -8,7 +8,6 @@ import (
 	"github.com/NpoolPlatform/third-middleware/api/v1/contact"
 
 	v1 "github.com/NpoolPlatform/message/npool/third/mw/v1"
-	"github.com/NpoolPlatform/third-middleware/api/v1/notify"
 	"github.com/NpoolPlatform/third-middleware/api/v1/verify"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -22,7 +21,7 @@ type Server struct {
 func Register(server grpc.ServiceRegistrar) {
 	v1.RegisterMiddlewareServer(server, &Server{})
 	verify.Register(server)
-	notify.Register(server)
+	notif.Register(server)
 	contact.Register(server)
 	notif.Register(server)
 }

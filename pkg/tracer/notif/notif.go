@@ -6,10 +6,10 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	trace1 "go.opentelemetry.io/otel/trace"
 
-	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/notify"
+	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/notif"
 )
 
-func trace(span trace1.Span, in *npool.NotifyEmailRequest, index int) trace1.Span {
+func trace(span trace1.Span, in *npool.NotifEmailRequest, index int) trace1.Span {
 	span.SetAttributes(
 		attribute.String(fmt.Sprintf("AppID.%v", index), in.GetAppID()),
 		attribute.String(fmt.Sprintf("FromAccount.%v", index), in.GetFromAccount()),
@@ -22,6 +22,6 @@ func trace(span trace1.Span, in *npool.NotifyEmailRequest, index int) trace1.Spa
 	return span
 }
 
-func Trace(span trace1.Span, in *npool.NotifyEmailRequest) trace1.Span {
+func Trace(span trace1.Span, in *npool.NotifEmailRequest) trace1.Span {
 	return trace(span, in, 0)
 }

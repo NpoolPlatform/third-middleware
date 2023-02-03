@@ -1,15 +1,15 @@
 //nolint:nolintlint,dupl
-package notify
+package notif
 
 import (
 	"context"
 	"time"
 
-	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
+	usedfor "github.com/NpoolPlatform/message/npool/notif/mgr/v1/notif"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
-	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/notify"
+	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/notif"
 
 	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
 )
@@ -34,17 +34,22 @@ func do(ctx context.Context, handler handler) error {
 	return handler(_ctx, cli)
 }
 
-func NotifyEmail(ctx context.Context,
-	appID,
-	fromAccount string,
-	usedFor usedfor.UsedFor,
+func NotifEmail(
+	ctx context.Context,
+	appID string,
+	fromAccount *string,
+	usedFor usedfor.EventType,
 	receiverAccount,
-	langID,
+	langID string,
 	senderName,
-	receiverName string,
+	receiverName,
+	message *string,
+	useTemplate bool,
+	title,
+	content string,
 ) error {
 	err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) error {
-		_, err := cli.NotifyEmail(ctx, &npool.NotifyEmailRequest{
+		_, err := cli.NotifEmail(ctx, &npool.NotifEmailRequest{
 			AppID:           appID,
 			FromAccount:     fromAccount,
 			UsedFor:         usedFor,
@@ -52,6 +57,10 @@ func NotifyEmail(ctx context.Context,
 			LangID:          langID,
 			SenderName:      senderName,
 			ReceiverName:    receiverName,
+			Message:         message,
+			UseTemplate:     useTemplate,
+			Title:           title,
+			Content:         content,
 		})
 		if err != nil {
 			return err
