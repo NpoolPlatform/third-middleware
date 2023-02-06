@@ -23,7 +23,6 @@ func Register(server grpc.ServiceRegistrar) {
 	verify.Register(server)
 	notif.Register(server)
 	contact.Register(server)
-	notif.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
