@@ -31,23 +31,23 @@ func (s *Server) SendNotifEmail(
 	}()
 
 	if in.GetSubject() == "" {
-		logger.Sugar().Errorw("SendNotifEmail", "error", err)
-		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		logger.Sugar().Errorw("SendNotifEmail", "Subject", in.GetSubject())
+		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, "Subject is invalid")
 	}
 
 	if in.GetContent() == "" {
-		logger.Sugar().Errorw("SendNotifEmail", "error", err)
-		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		logger.Sugar().Errorw("SendNotifEmail", "Content", in.GetContent())
+		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, "Content is invalid")
 	}
 
 	if in.GetFrom() == "" {
-		logger.Sugar().Errorw("SendNotifEmail", "error", err)
-		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		logger.Sugar().Errorw("SendNotifEmail", "From", in.GetFrom())
+		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, "From is invalid")
 	}
 
 	if in.GetTo() == "" {
-		logger.Sugar().Errorw("SendNotifEmail", "error", err)
-		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, err.Error())
+		logger.Sugar().Errorw("SendNotifEmail", "To", in.GetTo())
+		return &npool.SendNotifEmailResponse{}, status.Error(codes.InvalidArgument, "To is invalid")
 	}
 
 	err = email.SendEmailByAWS(in.GetSubject(), in.GetContent(), in.GetFrom(), in.GetTo())
