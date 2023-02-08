@@ -77,6 +77,7 @@ func validateConds(in *mgrpb.Conds) error {
 		case uint32(usedfor.EventType_DepositReceived):
 		case uint32(usedfor.EventType_KYCApproved):
 		case uint32(usedfor.EventType_KYCRejected):
+		case uint32(usedfor.EventType_Announcement):
 		default:
 			return fmt.Errorf("EventType is invalid")
 		}
