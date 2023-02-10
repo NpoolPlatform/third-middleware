@@ -4,7 +4,7 @@ const (
 	NotifTemplateVarName     = "{{ NAME }}"
 	NotifTemplateVarMessage  = "{{ MESSAGE }}"
 	NotifTemplateVarAmount   = "{{ AMOUNT }}"
-	NotifTemplateVarCoinUnit = "{{ COIN }}"
+	NotifTemplateVarCoinUnit = "{{ COIN_UNIT }}"
 	NotifTemplateVarDate     = "{{ DATE }}"
 	NotifTemplateVarTime     = "{{ TIME }}"
 	NotifTemplateVarAddress  = "{{ ADDRESS }}"
