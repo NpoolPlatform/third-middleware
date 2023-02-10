@@ -49,7 +49,7 @@ func SendNotifEmail(ctx context.Context, subject, content, from, to string) erro
 		return resp, nil
 	})
 	if err != nil {
-		return fmt.Errorf("fail send emial: %v", err)
+		return fmt.Errorf("fail send email: %v", err)
 	}
 	return nil
 }
