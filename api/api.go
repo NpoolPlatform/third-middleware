@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/third-middleware/api/v1/notif"
-	templatenotif "github.com/NpoolPlatform/third-middleware/api/v1/template/notif"
+	templateemail "github.com/NpoolPlatform/third-middleware/api/v1/template/email"
+	templatefrontend "github.com/NpoolPlatform/third-middleware/api/v1/template/frontend"
+	templatesms "github.com/NpoolPlatform/third-middleware/api/v1/template/sms"
 
 	"github.com/NpoolPlatform/third-middleware/api/v1/contact"
 
@@ -22,7 +24,9 @@ type Server struct {
 func Register(server grpc.ServiceRegistrar) {
 	v1.RegisterMiddlewareServer(server, &Server{})
 	verify.Register(server)
-	templatenotif.Register(server)
+	templatefrontend.Register(server)
+	templateemail.Register(server)
+	templatesms.Register(server)
 	notif.Register(server)
 	contact.Register(server)
 }

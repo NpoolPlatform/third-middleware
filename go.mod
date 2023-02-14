@@ -7,8 +7,8 @@ require (
 	github.com/NpoolPlatform/basal-middleware v0.0.0-20221228013048-951da3e0461c
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15
-	github.com/NpoolPlatform/message v0.0.0-20230210185231-91468dfbbbf6
-	github.com/NpoolPlatform/third-manager v0.0.0-20230210195219-a8c508548307
+	github.com/NpoolPlatform/message v0.0.0-20230214093505-99d163c81ff6
+	github.com/NpoolPlatform/third-manager v0.0.0-20230214141400-6ad1119d7f09
 	github.com/aws/aws-sdk-go v1.42.4
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-resty/resty/v2 v2.7.0

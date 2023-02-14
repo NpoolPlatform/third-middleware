@@ -1,5 +1,5 @@
 //nolint:nolintlint,dupl
-package notif
+package frontend
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/notif"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/frontend"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
-	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/template/notif"
+	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/template/frontend"
 
 	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
 )
@@ -36,54 +36,54 @@ func do(ctx context.Context, handler handler) (cruder.Any, error) {
 	return handler(_ctx, cli)
 }
 
-func GetNotifTemplate(ctx context.Context, id string) (*mgrpb.NotifTemplate, error) {
+func GetFrontendTemplate(ctx context.Context, id string) (*mgrpb.FrontendTemplate, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetNotifTemplate(ctx, &npool.GetNotifTemplateRequest{
+		resp, err := cli.GetFrontendTemplate(ctx, &npool.GetFrontendTemplateRequest{
 			ID: id,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get notif: %v", err)
+			return nil, fmt.Errorf("fail get frontend: %v", err)
 		}
 		return resp.Info, nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get notif: %v", err)
+		return nil, fmt.Errorf("fail get frontend: %v", err)
 	}
-	return info.(*mgrpb.NotifTemplate), nil
+	return info.(*mgrpb.FrontendTemplate), nil
 }
 
-func GetNotifTemplateOnly(ctx context.Context, conds *mgrpb.Conds) (*mgrpb.NotifTemplate, error) {
+func GetFrontendTemplateOnly(ctx context.Context, conds *mgrpb.Conds) (*mgrpb.FrontendTemplate, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetNotifTemplateOnly(ctx, &npool.GetNotifTemplateOnlyRequest{
+		resp, err := cli.GetFrontendTemplateOnly(ctx, &npool.GetFrontendTemplateOnlyRequest{
 			Conds: conds,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get notif: %v", err)
+			return nil, fmt.Errorf("fail get frontend: %v", err)
 		}
 		return resp.Info, nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("fail get notif: %v", err)
+		return nil, fmt.Errorf("fail get frontend: %v", err)
 	}
-	return info.(*mgrpb.NotifTemplate), nil
+	return info.(*mgrpb.FrontendTemplate), nil
 }
 
-func GetNotifTemplates(ctx context.Context, conds *mgrpb.Conds, offset, limit uint32) ([]*mgrpb.NotifTemplate, uint32, error) {
+func GetFrontendTemplates(ctx context.Context, conds *mgrpb.Conds, offset, limit uint32) ([]*mgrpb.FrontendTemplate, uint32, error) {
 	var total uint32
 	infos, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		resp, err := cli.GetNotifTemplates(ctx, &npool.GetNotifTemplatesRequest{
+		resp, err := cli.GetFrontendTemplates(ctx, &npool.GetFrontendTemplatesRequest{
 			Conds:  conds,
 			Offset: offset,
 			Limit:  limit,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("fail get notif: %v", err)
+			return nil, fmt.Errorf("fail get frontend: %v", err)
 		}
 		total = resp.GetTotal()
 		return resp.Infos, nil
 	})
 	if err != nil {
-		return nil, 0, fmt.Errorf("fail get notif: %v", err)
+		return nil, 0, fmt.Errorf("fail get frontend: %v", err)
 	}
-	return infos.([]*mgrpb.NotifTemplate), total, nil
+	return infos.([]*mgrpb.FrontendTemplate), total, nil
 }
