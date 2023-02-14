@@ -6,30 +6,37 @@ import (
 	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 )
 
-func ReplaceVariable(
-	content string,
-	userName, message, amount, coinUnit, date, time, address *string,
-) string {
-	if userName != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarName, *userName)
+type TemplateVars struct {
+	Username *string
+	Message  *string
+	Amount   *string
+	CoinUnit *string
+	Date     *string
+	Time     *string
+	Address  *string
+}
+
+func FillTemplate(template string, vars *TemplateVars) string {
+	if vars.Username != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarName, *vars.Username)
 	}
-	if message != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarMessage, *message)
+	if vars.Message != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarMessage, *vars.Message)
 	}
-	if amount != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarAmount, *amount)
+	if vars.Amount != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarAmount, *vars.Amount)
 	}
-	if coinUnit != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarCoinUnit, *coinUnit)
+	if vars.CoinUnit != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarCoinUnit, *vars.CoinUnit)
 	}
-	if date != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarDate, *date)
+	if vars.Date != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarDate, *vars.Date)
 	}
-	if time != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarTime, *time)
+	if vars.Time != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarTime, *vars.Time)
 	}
-	if address != nil {
-		content = strings.ReplaceAll(content, constant.NotifTemplateVarAddress, *address)
+	if vars.Address != nil {
+		template = strings.ReplaceAll(template, constant.NotifTemplateVarAddress, *vars.Address)
 	}
-	return content
+	return template
 }
