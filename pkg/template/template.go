@@ -1,4 +1,4 @@
-package notif
+package template
 
 import (
 	"strings"

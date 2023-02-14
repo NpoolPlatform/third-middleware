@@ -1,4 +1,4 @@
-package notif
+package email
 
 import (
 	"context"
@@ -21,9 +21,9 @@ import (
 
 	"github.com/NpoolPlatform/third-middleware/pkg/testinit"
 
-	usedfor "github.com/NpoolPlatform/message/npool/notif/mgr/v1/notif"
-	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/notif"
-	crud "github.com/NpoolPlatform/third-manager/pkg/crud/v1/template/notif"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/email"
+	usedfor "github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
+	crud "github.com/NpoolPlatform/third-manager/pkg/crud/v1/template/email"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,49 +36,53 @@ func init() {
 	}
 }
 
-var data = mgrpb.NotifTemplate{
-	ID:      uuid.NewString(),
-	AppID:   uuid.NewString(),
-	LangID:  uuid.NewString(),
-	UsedFor: usedfor.EventType_KYCApproved,
-	Title:   uuid.NewString(),
-	Content: uuid.NewString(),
+var data = mgrpb.EmailTemplate{
+	ID:                uuid.NewString(),
+	AppID:             uuid.NewString(),
+	LangID:            uuid.NewString(),
+	UsedFor:           usedfor.UsedFor_KYCApproved,
+	Sender:            uuid.NewString(),
+	ReplyTos:          []string{uuid.NewString()},
+	CCTos:             []string{uuid.NewString()},
+	Subject:           uuid.NewString(),
+	Body:              uuid.NewString(),
+	DefaultToUsername: uuid.NewString(),
 }
 
-func getNotifTemplate(t *testing.T) {
-	_, err := crud.Create(context.Background(), &mgrpb.NotifTemplateReq{
-		ID:      &data.ID,
-		AppID:   &data.AppID,
-		LangID:  &data.LangID,
-		UsedFor: &data.UsedFor,
-		Title:   &data.Title,
-		Content: &data.Content,
+func getEmailTemplate(t *testing.T) {
+	_, err := crud.Create(context.Background(), &mgrpb.EmailTemplateReq{
+		ID:                &data.ID,
+		AppID:             &data.AppID,
+		LangID:            &data.LangID,
+		UsedFor:           &data.UsedFor,
+		Sender:            &data.Sender,
+		ReplyTos:          data.ReplyTos,
+		CCTos:             data.CCTos,
+		Subject:           &data.Subject,
+		Body:              &data.Body,
+		DefaultToUsername: &data.DefaultToUsername,
 	})
 	assert.Nil(t, err)
 
-	info, err := GetNotifTemplate(context.Background(), data.ID)
+	info, err := GetEmailTemplate(context.Background(), data.ID)
 	if assert.Nil(t, err) {
-		data.CreatedAt = info.CreatedAt
-		data.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &data, info)
 	}
 }
 
-func getNotifTemplateOnly(t *testing.T) {
-	info, err := GetNotifTemplateOnly(context.Background(), &mgrpb.Conds{
+func getEmailTemplateOnly(t *testing.T) {
+	info, err := GetEmailTemplateOnly(context.Background(), &mgrpb.Conds{
 		ID: &valuedef.StringVal{
 			Op:    cruder.EQ,
 			Value: data.ID,
 		},
 	})
 	if assert.Nil(t, err) {
-		data.CreatedAt = info.CreatedAt
-		data.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, &data, info)
 	}
 }
-func getNotifTemplates(t *testing.T) {
-	infos, total, err := GetNotifTemplates(context.Background(), &mgrpb.Conds{
+func getEmailTemplates(t *testing.T) {
+	infos, total, err := GetEmailTemplates(context.Background(), &mgrpb.Conds{
 		ID: &valuedef.StringVal{
 			Op:    cruder.EQ,
 			Value: data.ID,
@@ -100,7 +104,7 @@ func TestClient(t *testing.T) {
 	monkey.Patch(grpc2.GetGRPCConn, func(service string, tags ...string) (*grpc.ClientConn, error) {
 		return grpc.Dial(fmt.Sprintf("localhost:%v", gport), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	})
-	t.Run("getNotifTemplate", getNotifTemplate)
-	t.Run("getNotifTemplateOnly", getNotifTemplateOnly)
-	t.Run("getNotifTemplates", getNotifTemplates)
+	t.Run("getEmailTemplate", getEmailTemplate)
+	t.Run("getEmailTemplateOnly", getEmailTemplateOnly)
+	t.Run("getEmailTemplates", getEmailTemplates)
 }
