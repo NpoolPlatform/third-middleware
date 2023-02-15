@@ -7,8 +7,6 @@ import (
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/app"
 
-	"github.com/NpoolPlatform/third-manager/pkg/db"
-
 	servicename "github.com/NpoolPlatform/third-middleware/pkg/servicename"
 
 	mysqlconst "github.com/NpoolPlatform/go-service-framework/pkg/mysql/const"
@@ -39,10 +37,6 @@ func Init() error {
 	)
 	if err != nil {
 		return fmt.Errorf("cannot init app stub: %v", err)
-	}
-	err = db.Init()
-	if err != nil {
-		return fmt.Errorf("cannot init database: %v", err)
 	}
 
 	return nil
