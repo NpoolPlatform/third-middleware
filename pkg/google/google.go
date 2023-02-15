@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+const (
+	GoogleRecaptchaV3URL    = "recaptcha_url"
+	GoogleRecaptchaV3Secret = "recaptcha_secret"
+)
+
 func hmacSha1(key, data []byte) []byte {
 	h := hmac.New(sha1.New, key)
 	if total := len(data); total > 0 {

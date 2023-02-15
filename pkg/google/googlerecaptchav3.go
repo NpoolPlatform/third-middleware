@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
-	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -21,8 +20,8 @@ type verifyResponse struct {
 
 func VerifyGoogleRecaptchaV3(recaptchaToken string) error {
 	hostname := config.GetStringValueWithNameSpace("", config.KeyHostname)
-	recaptchaURL := config.GetStringValueWithNameSpace(hostname, constant.GoogleRecaptchaV3URL)
-	recaptchaSecret := config.GetStringValueWithNameSpace(hostname, constant.GoogleRecaptchaV3Secret)
+	recaptchaURL := config.GetStringValueWithNameSpace(hostname, GoogleRecaptchaV3URL)
+	recaptchaSecret := config.GetStringValueWithNameSpace(hostname, GoogleRecaptchaV3Secret)
 
 	if recaptchaURL == "" || recaptchaSecret == "" {
 		return fmt.Errorf("invalid recaptcha parameter")

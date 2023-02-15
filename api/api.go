@@ -5,6 +5,7 @@ import (
 
 	v1 "github.com/NpoolPlatform/message/npool/third/mw/v1"
 
+	"github.com/NpoolPlatform/third-middleware/api/v1/send"
 	"github.com/NpoolPlatform/third-middleware/api/v1/verify"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,6 +19,7 @@ type Server struct {
 func Register(server grpc.ServiceRegistrar) {
 	v1.RegisterMiddlewareServer(server, &Server{})
 	verify.Register(server)
+	send.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
