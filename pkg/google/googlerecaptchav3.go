@@ -9,6 +9,11 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
+const (
+	GoogleRecaptchaV3URL    = "recaptcha_url"
+	GoogleRecaptchaV3Secret = "recaptcha_secret"
+)
+
 type verifyResponse struct {
 	Success     bool      `json:"success"`
 	Score       float64   `json:"score"`
