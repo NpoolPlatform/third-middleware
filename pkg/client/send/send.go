@@ -1,15 +1,13 @@
 //nolint:nolintlint,dupl
-package verify
+package send
 
 import (
 	"context"
 	"time"
 
-	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
-
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
-	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/contact"
+	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/send"
 
 	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
 )
@@ -34,23 +32,9 @@ func do(ctx context.Context, handler handler) error {
 	return handler(_ctx, cli)
 }
 
-func ContactViaEmail(ctx context.Context,
-	appID string,
-	usedFor usedfor.UsedFor,
-	sender,
-	subject,
-	body,
-	senderName string,
-) error {
+func SendMessage(ctx context.Context, in *npool.SendMessageRequest) error {
 	err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) error {
-		_, err := cli.ContactViaEmail(ctx, &npool.ContactViaEmailRequest{
-			AppID:      appID,
-			UsedFor:    usedFor,
-			Sender:     sender,
-			Subject:    subject,
-			Body:       body,
-			SenderName: senderName,
-		})
+		_, err := cli.SendMessage(ctx, in)
 		if err != nil {
 			return err
 		}

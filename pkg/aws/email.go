@@ -1,10 +1,9 @@
-package email
+package aws
 
 import (
 	"fmt"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
-	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -13,13 +12,10 @@ import (
 )
 
 const (
-	Region    = constant.AWSRegion
-	AccessKey = constant.AWSAccessKey
-	SecretKey = constant.AWSSecretKey
-	CharSet   = "UTF-8"
+	CharSet = "UTF-8"
 )
 
-func SendEmailByAWS(subject, content, from, to string, replyTo ...string) error {
+func SendEmail(subject, content, from, to string, replyTo ...string) error {
 	myServiceName := config.GetStringValueWithNameSpace("", config.KeyHostname)
 	region := config.GetStringValueWithNameSpace(myServiceName, Region)
 	accessKey := config.GetStringValueWithNameSpace(myServiceName, AccessKey)

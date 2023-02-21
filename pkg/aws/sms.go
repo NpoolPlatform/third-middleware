@@ -1,4 +1,4 @@
-package sms
+package aws
 
 import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
@@ -6,17 +6,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
-
-	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
 )
 
-const (
-	Region    = constant.AWSRegion
-	AccessKey = constant.AWSAccessKey
-	SecretKey = constant.AWSSecretKey
-)
-
-func SendSMSByAWS(msg, to string) error {
+func SendSMS(msg, to string) error {
 	myServiceName := config.GetStringValueWithNameSpace("", config.KeyHostname)
 	region := config.GetStringValueWithNameSpace(myServiceName, Region)
 	accessKey := config.GetStringValueWithNameSpace(myServiceName, AccessKey)
