@@ -1,3 +1,6 @@
 package servicename
 
-const ServiceName = "ThirdMiddleware"
+const (
+	ServiceName   = "ThirdMiddleware"
+	ServiceDomain = "third-middleware.npool.top"
+)

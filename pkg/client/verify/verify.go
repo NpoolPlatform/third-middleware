@@ -6,44 +6,37 @@ import (
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/verify"
 
-	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
+	servicename "github.com/NpoolPlatform/third-middleware/pkg/servicename"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) error
-
-func do(ctx context.Context, handler handler) error {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
+func do(ctx context.Context, fn func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error)) (cruder.Any, error) {
+	_ctx, cancel := context.WithTimeout(ctx, 10*time.Second) //nolint
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
+	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	defer conn.Close()
 
 	cli := npool.NewMiddlewareClient(conn)
 
-	return handler(_ctx, cli)
+	return fn(_ctx, cli)
 }
 
-func VerifyGoogleRecaptchaV3(
-	ctx context.Context,
-	recaptchaToken string,
-) error {
-	err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) error {
+func VerifyGoogleRecaptchaV3(ctx context.Context, recaptchaToken string) error {
+	_, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		_, err := cli.VerifyGoogleRecaptchaV3(ctx, &npool.VerifyGoogleRecaptchaV3Request{
 			RecaptchaToken: recaptchaToken,
 		})
 		if err != nil {
-			return err
+			return nil, err
 		}
-		return nil
+		return nil, nil
 	})
 	if err != nil {
 		return err

@@ -3,45 +3,42 @@ package send
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/send"
 
-	constant "github.com/NpoolPlatform/third-middleware/pkg/message/const"
+	servicename "github.com/NpoolPlatform/third-middleware/pkg/servicename"
 )
 
-var timeout = 10 * time.Second
-
-type handler func(context.Context, npool.MiddlewareClient) error
-
-func do(ctx context.Context, handler handler) error {
-	_ctx, cancel := context.WithTimeout(ctx, timeout)
+func do(ctx context.Context, fn func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error)) (cruder.Any, error) {
+	_ctx, cancel := context.WithTimeout(ctx, 10*time.Second) //nolint
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
+	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	defer conn.Close()
 
 	cli := npool.NewMiddlewareClient(conn)
 
-	return handler(_ctx, cli)
+	return fn(_ctx, cli)
 }
 
 func SendMessage(ctx context.Context, in *npool.SendMessageRequest) error {
-	err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) error {
+	_, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		_, err := cli.SendMessage(ctx, in)
 		if err != nil {
-			return err
+			return nil, fmt.Errorf("fail send message: %v", err)
 		}
-		return nil
+		return nil, nil
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("fail send message: %v", err)
 	}
 	return nil
 }
