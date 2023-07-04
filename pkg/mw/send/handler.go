@@ -29,9 +29,6 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 
 func WithSubject(subject string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if subject == "" {
-			return nil
-		}
 		h.Subject = subject
 		return nil
 	}
@@ -39,9 +36,6 @@ func WithSubject(subject string) func(context.Context, *Handler) error {
 
 func WithContent(content string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if content == "" {
-			return nil
-		}
 		h.Content = content
 		return nil
 	}
@@ -49,9 +43,6 @@ func WithContent(content string) func(context.Context, *Handler) error {
 
 func WithFrom(from string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if from == "" {
-			return nil
-		}
 		h.From = from
 		return nil
 	}
@@ -59,9 +50,6 @@ func WithFrom(from string) func(context.Context, *Handler) error {
 
 func WithTo(to string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if to == "" {
-			return nil
-		}
 		h.To = to
 		return nil
 	}
@@ -69,9 +57,6 @@ func WithTo(to string) func(context.Context, *Handler) error {
 
 func WithToCCs(toCCs []string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if toCCs == nil {
-			return nil
-		}
 		if len(toCCs) == 0 {
 			return nil
 		}
@@ -82,9 +67,6 @@ func WithToCCs(toCCs []string) func(context.Context, *Handler) error {
 
 func WithReplyTos(replyTos []string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
-		if replyTos == nil {
-			return nil
-		}
 		if len(replyTos) == 0 {
 			return nil
 		}
