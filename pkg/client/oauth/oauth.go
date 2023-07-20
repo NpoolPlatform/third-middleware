@@ -3,11 +3,11 @@ package oauth
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 
 	npool "github.com/NpoolPlatform/message/npool/third/mw/v1/oauth"
 
@@ -29,30 +29,38 @@ func do(ctx context.Context, fn func(_ctx context.Context, cli npool.MiddlewareC
 	return fn(_ctx, cli)
 }
 
-func GetOAuthAccessToken(ctx context.Context, in *npool.GetOAuthAccessTokenRequest) error {
+func GetOAuthAccessToken(ctx context.Context, clientName basetypes.SignMethod, clientID, clientSecret, code string) (string, error) {
 	_, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		_, err := cli.GetOAuthAccessToken(ctx, in)
+		resp, err := cli.GetOAuthAccessToken(ctx, &npool.GetOAuthAccessTokenRequest{
+			ClientName:   clientName,
+			ClientID:     clientID,
+			ClientSecret: clientSecret,
+			Code:         code,
+		})
 		if err != nil {
-			return nil, fmt.Errorf("fail getOAuth message: %v", err)
+			return nil, err
 		}
-		return nil, nil
+		return resp.AccessToken, nil
 	})
 	if err != nil {
-		return fmt.Errorf("fail send message: %v", err)
+		return "", err
 	}
-	return nil
+	return "", nil
 }
 
-func GetOAuthUserInfo(ctx context.Context, in *npool.GetOAuthUserInfoRequest) error {
-	_, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
-		_, err := cli.GetOAuthUserInfo(ctx, in)
+func GetOAuthUserInfo(ctx context.Context, clientName basetypes.SignMethod, token string) (*npool.ThirdUserInfo, error) {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
+		resp, err := cli.GetOAuthUserInfo(ctx, &npool.GetOAuthUserInfoRequest{
+			ClientName:  clientName,
+			AccessToken: token,
+		})
 		if err != nil {
-			return nil, fmt.Errorf("fail send message: %v", err)
+			return nil, err
 		}
-		return nil, nil
+		return resp.Info, nil
 	})
 	if err != nil {
-		return fmt.Errorf("fail send message: %v", err)
+		return nil, err
 	}
-	return nil
+	return info.(*npool.ThirdUserInfo), nil
 }
