@@ -26,7 +26,8 @@ func (h *Handler) GetAccessToken(ctx context.Context) (string, error) {
 			if err != nil {
 				return "", fmt.Errorf("get error_description error")
 			}
-			return "", fmt.Errorf(string(errByte))
+			errStr := string(errByte)
+			return "", fmt.Errorf("%s", errStr)
 		}
 		accessTokenByte, err := json.Marshal(jsonMap["access_token"])
 		if err != nil {
@@ -55,7 +56,8 @@ func (h *Handler) GetThirdUserInfo(ctx context.Context) (*npool.ThirdUserInfo, e
 			if err != nil {
 				return nil, fmt.Errorf("get message error")
 			}
-			return nil, fmt.Errorf(string(messageByte))
+			errStr := string(messageByte)
+			return nil, fmt.Errorf("%s", errStr)
 		}
 		idByte, err := json.Marshal(jsonMap["id"])
 		if err != nil {

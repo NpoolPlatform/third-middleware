@@ -3,62 +3,88 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"net/url"
+	"os"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	constant "github.com/NpoolPlatform/third-middleware/pkg/const"
+	"github.com/go-resty/resty/v2"
 )
 
 func GetAccessToken(clientID, clientSecret, code string) (map[string]interface{}, error) {
-	var req *http.Request
 	var err error
-	var getTokenURL = "https://github.com/login/oauth/access_token"
-	reqBody := fmt.Sprintf(
-		"client_id=%s&client_secret=%s&code=%s",
-		clientID, clientSecret, code,
+	reqURL := fmt.Sprintf(
+		"%s?client_id=%s&client_secret=%s&code=%s",
+		constant.GithubGetAccessTokenURL, clientID, clientSecret, code,
 	)
-	if req, err = http.NewRequest(http.MethodGet, getTokenURL+"?"+reqBody, nil); err != nil {
-		logger.Sugar().Error("build req err: ", err)
+	socksProxy := os.Getenv("ENV_RECAPTCHA_REQUEST_PROXY")
+
+	cli := resty.New()
+
+	if socksProxy != "" {
+		cli = cli.SetProxy(socksProxy)
+	}
+
+	var resp *resty.Response
+	resp, err = cli.R().
+		Get(reqURL)
+	if err != nil {
+		logger.Sugar().Error("req err:", err)
 		return nil, err
 	}
-	req.Header.Set("accept", "application/json")
 
-	var httpClient = http.Client{}
-	var res *http.Response
-	if res, err = httpClient.Do(req); err != nil {
-		logger.Sugar().Error("send req err: ", err)
+	if !resp.IsSuccess() {
+		logger.Sugar().Error("resp err: ", resp.StatusCode())
+		return nil, err
+	}
+
+	queryParams, err := url.ParseQuery(resp.String())
+	if err != nil {
+		logger.Sugar().Error("decode param err: ", err)
 		return nil, err
 	}
 
 	var token = make(map[string]interface{})
-	if err = json.NewDecoder(res.Body).Decode(&token); err != nil {
-		logger.Sugar().Error("resp err: ", err)
-		return nil, err
+	for key, values := range queryParams {
+		if len(values) > 0 {
+			token[key] = values[0]
+		}
 	}
+
 	return token, nil
 }
 
 func GetUserInfo(accessToken string) (map[string]interface{}, error) {
-	var req *http.Request
 	var err error
-	var getUserInfoURL = "https://api.github.com/user"
-	if req, err = http.NewRequest(http.MethodGet, getUserInfoURL, nil); err != nil {
-		logger.Sugar().Error("build req err: ", err)
+
+	socksProxy := os.Getenv("ENV_RECAPTCHA_REQUEST_PROXY")
+
+	cli := resty.New()
+
+	if socksProxy != "" {
+		cli = cli.SetProxy(socksProxy)
+	}
+
+	var resp *resty.Response
+	resp, err = cli.R().
+		SetHeader("accept", "application/json").
+		SetHeader("Authorization", fmt.Sprintf("token %s", accessToken)).
+		Get(constant.GithubGetUserInfoURL)
+	if err != nil {
+		logger.Sugar().Error("req err:", err)
 		return nil, err
 	}
-	req.Header.Set("accept", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("token %s", accessToken))
 
-	var client = http.Client{}
-	var res *http.Response
-	if res, err = client.Do(req); err != nil {
-		logger.Sugar().Error("send req err: ", err)
+	if !resp.IsSuccess() {
+		logger.Sugar().Error("resp error: ", resp.StatusCode())
 		return nil, err
 	}
 
 	var userInfo = make(map[string]interface{})
-	if err = json.NewDecoder(res.Body).Decode(&userInfo); err != nil {
-		logger.Sugar().Error("resp err: ", err)
+	if err = json.Unmarshal(resp.Body(), &userInfo); err != nil {
+		logger.Sugar().Error("decode param err: ", err)
 		return nil, err
 	}
+
 	return userInfo, nil
 }
