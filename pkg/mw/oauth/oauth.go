@@ -34,7 +34,8 @@ func (h *Handler) GetAccessToken(ctx context.Context) (string, error) {
 			return "", fmt.Errorf("get accesstoken error")
 		}
 
-		return string(accessTokenByte), nil
+		accessTokenStr := string(accessTokenByte)
+		return accessTokenStr, nil
 	default:
 		return "", fmt.Errorf("unsupport oauth")
 	}
