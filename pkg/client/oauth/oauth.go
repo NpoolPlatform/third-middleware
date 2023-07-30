@@ -29,7 +29,7 @@ func do(ctx context.Context, fn func(_ctx context.Context, cli npool.MiddlewareC
 	return fn(_ctx, cli)
 }
 
-func GetOAuthAccessToken(ctx context.Context, clientName basetypes.SignMethod, clientID, clientSecret, code string) (string, error) {
+func GetOAuthAccessToken(ctx context.Context, clientName basetypes.SignMethod, clientID, clientSecret, code string) (*string, error) {
 	info, err := do(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetOAuthAccessToken(ctx, &npool.GetOAuthAccessTokenRequest{
 			ClientName:   clientName,
@@ -43,9 +43,9 @@ func GetOAuthAccessToken(ctx context.Context, clientName basetypes.SignMethod, c
 		return resp.AccessToken, nil
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return info.(string), nil
+	return info.(*string), nil
 }
 
 func GetOAuthUserInfo(ctx context.Context, clientName basetypes.SignMethod, token string) (*npool.ThirdUserInfo, error) {
