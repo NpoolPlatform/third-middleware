@@ -10,34 +10,35 @@ import (
 	github "github.com/NpoolPlatform/third-middleware/pkg/github"
 )
 
-func (h *Handler) GetAccessToken(ctx context.Context) (string, error) {
+func (h *Handler) GetAccessToken(ctx context.Context) (*npool.AccessTokenInfo, error) {
 	if h.Code == "" {
-		return "", fmt.Errorf("invalid code")
+		return nil, fmt.Errorf("invalid code")
 	}
 
 	switch h.ClientName {
 	case basetypes.SignMethod_Github:
 		jsonMap, err := github.GetAccessToken(h.ClientID, h.ClientSecret, h.Code)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		if jsonMap["error_description"] != nil {
 			errByte, err := json.Marshal(jsonMap["error_description"])
 			if err != nil {
-				return "", fmt.Errorf("get error_description error")
+				return nil, fmt.Errorf("get error_description error")
 			}
 			errStr := string(errByte)
-			return "", fmt.Errorf("%s", errStr)
+			return nil, fmt.Errorf("%s", errStr)
 		}
 		accessTokenByte, err := json.Marshal(jsonMap["access_token"])
 		if err != nil {
-			return "", fmt.Errorf("get accesstoken error")
+			return nil, fmt.Errorf("get accesstoken error")
 		}
-
 		accessTokenStr := string(accessTokenByte)
-		return accessTokenStr, nil
+		return &npool.AccessTokenInfo{
+			AccessToken: accessTokenStr,
+		}, nil
 	default:
-		return "", fmt.Errorf("unsupport oauth")
+		return nil, fmt.Errorf("unsupport oauth")
 	}
 }
 

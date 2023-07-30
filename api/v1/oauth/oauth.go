@@ -37,7 +37,7 @@ func (s *Server) GetOAuthAccessToken(
 	}
 
 	return &npool.GetOAuthAccessTokenResponse{
-		AccessToken: info,
+		Info: info,
 	}, nil
 }
 
