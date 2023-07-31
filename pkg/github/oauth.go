@@ -58,6 +58,14 @@ func GetAccessToken(clientID, clientSecret, code string) (*npool.AccessTokenInfo
 	}, nil
 }
 
+type UserInfo struct {
+	ID        int    `json:"id"`
+	Name      string `json:"name"`
+	Login     string `json:"login"`
+	AvatarURL string `json:"avatar_url"`
+	Message   string `json:"message"`
+}
+
 func GetUserInfo(accessToken string) (*npool.ThirdUserInfo, error) {
 	var err error
 
@@ -84,42 +92,36 @@ func GetUserInfo(accessToken string) (*npool.ThirdUserInfo, error) {
 		return nil, fmt.Errorf("resp error: %v", resp.StatusCode())
 	}
 
-	var userInfo = make(map[string]interface{})
-	if err = json.Unmarshal(resp.Body(), &userInfo); err != nil {
+	var userInfoMap = make(map[string]interface{})
+	if err = json.Unmarshal(resp.Body(), &userInfoMap); err != nil {
 		logger.Sugar().Error("decode param err: ", err)
 		return nil, err
 	}
 
-	if userInfo["message"] != nil {
-		messageByte, err := json.Marshal(userInfo["message"])
-		if err != nil {
-			return nil, fmt.Errorf("get message error")
-		}
-		errStr := string(messageByte)
-		return nil, fmt.Errorf("%s", errStr)
+	jsonData, err := json.Marshal(userInfoMap)
+	if err != nil {
+		logger.Sugar().Error("decode json err：", err)
+		return nil, err
 	}
 
-	idByte, err := json.Marshal(userInfo["id"])
+	var userInfo UserInfo
+	err = json.Unmarshal(jsonData, &userInfo)
 	if err != nil {
-		return nil, fmt.Errorf("get id error")
+		logger.Sugar().Error("decode info err：", err)
+		return nil, err
 	}
-	nameByte, err := json.MarshalIndent(userInfo["name"], "", "  ")
-	if err != nil {
-		return nil, fmt.Errorf("get name error")
+
+	if userInfo.Message != "" {
+		logger.Sugar().Error("get usetinfo err: ", userInfo.Message)
+		return nil, fmt.Errorf("%s", userInfo.Message)
 	}
-	loginByte, err := json.MarshalIndent(userInfo["login"], "", "  ")
-	if err != nil {
-		return nil, fmt.Errorf("get login error")
-	}
-	avatarURLByte, err := json.MarshalIndent(userInfo["avatar_url"], "", "  ")
-	if err != nil {
-		return nil, fmt.Errorf("get avatarURL error")
-	}
+	id := fmt.Sprintf("%d", userInfo.ID)
+
 	info := &npool.ThirdUserInfo{
-		ID:        string(idByte),
-		Name:      string(nameByte),
-		Login:     string(loginByte),
-		AvatarURL: string(avatarURLByte),
+		ID:        id,
+		Name:      userInfo.Name,
+		Login:     userInfo.Login,
+		AvatarURL: userInfo.AvatarURL,
 	}
 
 	return info, nil
