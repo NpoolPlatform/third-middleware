@@ -47,6 +47,11 @@ spec:
                 configMapKeyRef:
                   name: recaptcha-proxy-environment
                   key: environment.recaptcha_proxy
+            - name: ENV_REQUEST_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  name: request-proxy-environment
+                  key: environment.request_proxy
       volumes:
         - name: service-config
           configMap:

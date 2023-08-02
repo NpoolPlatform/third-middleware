@@ -18,7 +18,7 @@ func GetAccessToken(clientID, clientSecret, code string) (*npool.AccessTokenInfo
 		"%s?client_id=%s&client_secret=%s&code=%s",
 		constant.GithubGetAccessTokenURL, clientID, clientSecret, code,
 	)
-	socksProxy := os.Getenv("ENV_RECAPTCHA_REQUEST_PROXY")
+	socksProxy := os.Getenv("ENV_REQUEST_PROXY")
 
 	cli := resty.New()
 
@@ -69,7 +69,7 @@ type UserInfo struct {
 func GetUserInfo(accessToken string) (*npool.ThirdUserInfo, error) {
 	var err error
 
-	socksProxy := os.Getenv("ENV_RECAPTCHA_REQUEST_PROXY")
+	socksProxy := os.Getenv("ENV_REQUEST_PROXY")
 
 	cli := resty.New()
 

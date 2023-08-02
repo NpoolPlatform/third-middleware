@@ -5,3 +5,11 @@ metadata:
   namespace: kube-system
 data:
   environment.recaptcha_proxy: ""
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: request-proxy-environment
+  namespace: kube-system
+data:
+  environment.request_proxy: ""
