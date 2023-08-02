@@ -24,6 +24,7 @@ func (s *Server) GetOAuthAccessToken(
 		oauth1.WithClientName(in.GetClientName()),
 		oauth1.WithClientID(in.GetClientID()),
 		oauth1.WithClientSecret(in.GetClientSecret()),
+		oauth1.WithRedirectURI(in.GetRedirectURI()),
 		oauth1.WithCode(in.GetCode()),
 	)
 	if err != nil {

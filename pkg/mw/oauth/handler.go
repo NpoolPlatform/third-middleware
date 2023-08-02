@@ -13,6 +13,7 @@ type Handler struct {
 	ClientName   basetypes.SignMethod
 	Code         string
 	AccessToken  string
+	RedirectURI  string
 }
 
 func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) error) (*Handler, error) {
@@ -35,6 +36,13 @@ func WithClientID(clientID string) func(context.Context, *Handler) error {
 func WithClientSecret(clientSecret string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.ClientSecret = clientSecret
+		return nil
+	}
+}
+
+func WithRedirectURI(redirectURI string) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.RedirectURI = redirectURI
 		return nil
 	}
 }
