@@ -363,6 +363,8 @@ pipeline {
       steps {
         sh(returnStdout: false, script: '''
           feature_name=`echo $BRANCH_NAME | awk -F '/' '{ print $2 }'`
+          sed -i "s#recaptcha_proxy: \\\"\\\"#recaptcha_proxy: \\\"$RECAPTCHA_REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml
+          sed -i "s#request_proxy: \\\"\\\"#request_proxy: \\\"$REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml
           sed -i "s/third-middleware:latest/third-middleware:$feature_name/g" cmd/third-middleware/k8s/02-third-middleware.yaml
           sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-middleware/k8s/02-third-middleware.yaml
           TAG=$feature_name make deploy-to-k8s-cluster
@@ -378,6 +380,8 @@ pipeline {
       }
       steps {
         sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-middleware/k8s/02-third-middleware.yaml'
+        sh 'sed -i "s#recaptcha_proxy: \\\"\\\"#recaptcha_proxy: \\\"$RECAPTCHA_REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml'
+        sh 'sed -i "s#request_proxy: \\\"\\\"#request_proxy: \\\"$REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -401,6 +405,8 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/third-middleware:latest/third-middleware:$tag/g" cmd/third-middleware/k8s/02-third-middleware.yaml
+          sed -i "s#recaptcha_proxy: \\\"\\\"#recaptcha_proxy: \\\"$RECAPTCHA_REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml
+          sed -i "s#request_proxy: \\\"\\\"#request_proxy: \\\"$REQUEST_PROXY\\\"#g" cmd/third-middleware/k8s/00-configmap.yaml
           sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-middleware/k8s/02-third-middleware.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
