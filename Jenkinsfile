@@ -371,6 +371,7 @@ pipeline {
             REPLICAS_COUNT=2
           fi
           sed -i "s/replicas: 2/replicas: $REPLICAS_COUNT/g" cmd/third-middleware/k8s/02-third-middleware.yaml
+          sed -i "s/imagePullPolicy: Always/imagePullPolicy: IfNotPresent/g" cmd/third-middleware/k8s/02-third-middleware.yaml
           make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -399,6 +400,7 @@ pipeline {
             REPLICAS_COUNT=2
           fi
           sed -i "s/replicas: 2/replicas: $REPLICAS_COUNT/g" cmd/third-middleware/k8s/02-third-middleware.yaml
+          sed -i "s/imagePullPolicy: Always/imagePullPolicy: IfNotPresent/g" cmd/third-middleware/k8s/02-third-middleware.yaml
           make deploy-to-k8s-cluster
         '''.stripIndent())
       }
